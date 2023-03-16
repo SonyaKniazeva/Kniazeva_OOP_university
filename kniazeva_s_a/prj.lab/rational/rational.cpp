@@ -1,4 +1,5 @@
 #include <rational/rational.hpp>
+
 #include <iosfwd>
 #include <cstdint>
 #include <iostream>
@@ -12,7 +13,6 @@ int32_t gcd(int32_t a, int32_t b) {
     return gcd(b, a % b);
 }
 
-
 Rational::Rational(int32_t num) noexcept : num_(num), den_(1) {};
 
 Rational::Rational(int32_t num, int32_t denom) {
@@ -22,14 +22,16 @@ Rational::Rational(int32_t num, int32_t denom) {
         num_ = num;
         den_ = denom;
     }
+    normalize();
 };
 
 
 Rational Rational::operator-() const noexcept {
-    return(-num_);
+    return Rational(num_ * (-1), den_);
 };
 Rational::operator bool() const noexcept {
     if (num_ == 0) return false;
+    return true;
 };
 
 bool Rational::operator==(const Rational& rhs) const noexcept {
@@ -80,15 +82,24 @@ Rational& Rational::operator/=(const Rational& rhs) {
 };
 
 void Rational::normalize() noexcept {
-    int32_t g = gcd(abs(num_), den_);
-    num_ /= g;
-    den_ /= g;
-    if (num_ < 0 && den_ < 0) {
-        num_ = -num_;
-        den_ = -den_;
+    if (num() * 1ll * denom() < 0) {
+        num_ = -abs(num());
+        den_ = abs(denom());
     }
-};
+    else {
+        num_ = abs(num());
+        den_ = abs(denom());
+    }
 
+    if (num_ == 0) {
+        den_ = 1;
+    }
+    else {
+        int32_t gcd = std::gcd(std::abs(num()), denom());
+        num_ /= gcd;
+        den_ /= gcd;
+    }
+}
 
 std::ostream& operator<<(std::ostream& ostrm, const Rational& rhs) noexcept {
     return rhs.write_to(ostrm);
@@ -103,12 +114,12 @@ std::ostream& Rational::write_to(std::ostream& ostrm) const noexcept {
     return ostrm;
 };
 std::istream& Rational::read_from(std::istream& istrm) noexcept {
-    double num;
+    int32_t num;
     char delimiter;
-    double den;
+    int32_t den;
     istrm >> num >> delimiter >> den;
-    if (istrm.good()) {
-        if (Rational::delimiter_ == '/' && den != 0) {
+    if (istrm.eof() || istrm.good()) {
+        if (Rational::delimiter_ == delimiter && den > 0) {
             num_ = num;
             den_ = den;
         }
@@ -117,5 +128,4 @@ std::istream& Rational::read_from(std::istream& istrm) noexcept {
         }
     }
     return istrm;
-
 };
