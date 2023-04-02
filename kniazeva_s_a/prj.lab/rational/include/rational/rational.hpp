@@ -1,5 +1,3 @@
-// Copyright 2023 by Polevoy Dmitry under Free Public License 1.0.0
-
 #pragma once
 #ifndef RATIONAL_RATIONAL_HPP_20230215
 #define RATIONAL_RATIONAL_HPP_20230215
