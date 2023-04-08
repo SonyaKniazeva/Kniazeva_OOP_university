@@ -120,7 +120,7 @@ std::istream& Rational::read_from(std::istream& istrm) noexcept {
 
     istrm >> std::ws >> num >> std::noskipws >> delimiter >> den;
     if (istrm.eof() || istrm.good()) {
-        if (Rational::delimiter_ == delimiter && den >= 0) {
+        if (Rational::delimiter_ == delimiter && den > 0) {
             *this = Rational(num, den);
         }
         else {

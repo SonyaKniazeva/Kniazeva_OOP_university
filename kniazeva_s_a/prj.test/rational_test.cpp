@@ -318,6 +318,15 @@ TEST_CASE("[rational] - I/O") {
             CHECK(sstrm.fail());
             CHECK(!sstrm.bad());
         }
+
+        sstrm.clear();
+
+        SUBCASE("den 0") {
+            sstrm.str("3/0");
+            sstrm >> r;
+            CHECK(sstrm.fail());
+            CHECK(!sstrm.bad());
+        }
     }
 
 }
