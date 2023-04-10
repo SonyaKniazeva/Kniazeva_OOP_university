@@ -36,6 +36,30 @@ TEST_CASE("[rational] - Rational division") {
     CHECK_THROWS(Rational(3, 2) / Rational(5, 0));
 }
 
+TEST_CASE("/=") {
+    Rational a = Rational(3, 4);
+    a /= a;
+    CHECK(a == Rational(1));
+}
+
+TEST_CASE("*=") {
+    Rational a = Rational(3, 4);
+    a *= a;
+    CHECK(a == Rational(9, 16));
+}
+
+TEST_CASE("-=") {
+    Rational a = Rational(3, 4);
+    a -= a;
+    CHECK(a == Rational(0));
+}
+
+TEST_CASE("+=") {
+    Rational a = Rational(3, 4);
+    a += a;
+    CHECK(a == Rational(3, 2));
+}
+
 TEST_CASE("[rational] - Rational minus") {
     CHECK(-Rational() == Rational());
     CHECK(Rational(-5, 3) == -Rational(5, 3));
