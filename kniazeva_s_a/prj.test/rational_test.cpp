@@ -67,6 +67,33 @@ TEST_CASE("[rational] - Rational minus") {
     CHECK(Rational(29, 41) == -Rational(-29, 41));
 }
 
+
+TEST_CASE("checking throw") {
+    Rational zero = Rational(0);
+    Rational half = Rational(1, 2);
+    CHECK(Rational(4, 5) < Rational(5, 6));
+    CHECK(Rational(0, 3) == Rational(0));
+
+    CHECK(!Rational(0, 123));
+    CHECK(Rational(1));
+
+    CHECK(Rational(0, -1) / Rational(INT_MAX) == Rational(0));
+    CHECK(Rational(1, 2) == half);
+    CHECK(Rational(1, -2) == -half);
+    CHECK(Rational(-1, 2) == -half);
+    CHECK(Rational(-1, -2) == half);
+    CHECK(Rational(-2, -4) == half);
+
+    CHECK(Rational(-0, -4) == zero);
+    CHECK(Rational(0, -1) == zero);
+    CHECK(Rational(0, 4) == zero);
+    CHECK(Rational(-0) == zero);
+
+    CHECK_THROWS(Rational(1, 0));
+    CHECK_THROWS(Rational(1) / Rational(0));
+    CHECK_THROWS(Rational(0, -0));
+}
+
 TEST_CASE("[rational] - I/O") {
 
     SUBCASE("Output") {
@@ -336,6 +363,14 @@ TEST_CASE("[rational] - I/O") {
 
         sstrm.clear();
 
+        SUBCASE("Several rationals in one string without symbol") {
+            sstrm.str("1/3  3/7 5/4");
+            sstrm >> r1 >> r2 >> r3;
+            CHECK(r3 == Rational(5, 4));
+        }
+
+        sstrm.clear();
+
         SUBCASE("Several rationals in one string with symbols before") {
             sstrm.str("1/3 a3/7 5/4");
             sstrm >> r1 >> r2 >> r3;
@@ -352,5 +387,6 @@ TEST_CASE("[rational] - I/O") {
             CHECK(!sstrm.bad());
         }
     }
+
 
 }

@@ -75,11 +75,16 @@ Rational& Rational::operator-=(const Rational& rhs) noexcept {
 };
 
 Rational& Rational::operator/=(const Rational& rhs) {
-    int32_t tmp = rhs.num();
-    num_ *= rhs.denom();
-    den_ *= tmp;
-    normalize();
-    return *this;
+    if (rhs > 0) {
+        int32_t tmp = rhs.num();
+        num_ *= rhs.denom();
+        den_ *= tmp;
+        normalize();
+        return *this;
+    }
+    else {
+        throw "Deminator is not correct: \n";
+    }
 };
 
 void Rational::normalize() noexcept {
