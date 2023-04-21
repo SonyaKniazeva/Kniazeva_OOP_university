@@ -75,7 +75,7 @@ Rational& Rational::operator-=(const Rational& rhs) noexcept {
 };
 
 Rational& Rational::operator/=(const Rational& rhs) {
-    if (rhs > 0) {
+    if (rhs.num_ != 0) {
         int32_t tmp = rhs.num();
         num_ *= rhs.denom();
         den_ *= tmp;
