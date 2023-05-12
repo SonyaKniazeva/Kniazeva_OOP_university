@@ -51,6 +51,7 @@ Quad::Quad(const int x, const int y, const int high, const int len) {
 }*/
 
 
+
 //пересечение intersect
 //объединение union - это прямоугольник, который объединяет
 //масштабирование scale
