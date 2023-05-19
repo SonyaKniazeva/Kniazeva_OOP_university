@@ -1,0 +1,85 @@
+#include<iostream>
+
+class Quad {
+public:
+	Quad(const double x, const double y, const double w, const double h);
+	~Quad() {};
+
+	double GetW();//получить
+	void SetW(const double w); //установить
+	double GetH();
+	void SetH(const double h);
+
+	Quad scale(Quad q, int alpha);
+
+
+private:
+	double xleft = 0;
+	double yleft = 0;
+	double w_ = 1;
+	double h_ = 1;
+};
+
+int main() {
+	Quad q(0, 0, 1, 2); //проверка работы конструктора с параметрами
+	Quad qr(); //проверка работы конструктора с параметрами по умолчанию
+	std::cout << q.GetW() << std::endl;//проверка работы геттера
+	std::cout << q.GetH() << std::endl;//проверка работы геттера
+	q.SetW(10);//проверка работы сеттера
+	q.SetH(20);//проверка работы сеттера
+	std::cout << q.GetW() << std::endl;//проверка работы сеттера
+	std::cout << q.GetH() << std::endl;//проверка работы сеттера
+	//q.scale(qr, 0);
+}
+
+
+Quad::Quad(const double x, const double y, const double w, const double h) {
+	xleft = x;
+	yleft = y;
+	w_ = w;
+	h_ = h;
+}
+
+double Quad::GetW() {
+	return w_;
+}
+
+double Quad::GetH() {
+	return h_;
+}
+
+void Quad::SetW(const double w) {
+	w_ = w;
+}
+
+void Quad::SetH(const double h) {
+	h_ = h;
+}
+
+Quad Quad::scale(Quad q, int alpha) {
+	if (alpha <= 0) {
+		throw "invalid alpha /n";
+	}
+	else {
+	}
+}
+
+
+
+
+
+
+
+
+
+
+/*Quad(произвольный четырехугольник)
+Rect(прямоугольник)  Square(квадрат)
+W - ширина
+H - высота
+GetW
+GetH
+SetW
+SetH
+intersect - пересечение
+scale - масштабирование*/
