@@ -64,11 +64,8 @@ int& MatrixS::at(const SizeType& elem) {
 const int& MatrixS::at(const SizeType& elem) const {
     auto i = std::get<0>(elem);
     auto j = std::get<1>(elem);
-    std::ptrdiff_t k = 0;
-    while (i != iarr[k] && !(i > iarr[k] && i < iarr[k + 1])) {
-        k++;
-    }
-    return earr[k * n_ + j];
+
+    return earr[iarr[i] + j];
 }
 
 int& MatrixS::at(const std::ptrdiff_t i, const std::ptrdiff_t j) {
@@ -76,11 +73,8 @@ int& MatrixS::at(const std::ptrdiff_t i, const std::ptrdiff_t j) {
         throw std::out_of_range("index out of range");
     }
     else {
-        std::ptrdiff_t k = 0;
-        while (i != iarr[k] && !(i > iarr[k] && i < iarr[k + 1])) {
-            k++;
-        }
-        return earr[k * n_ + j];
+
+        return earr[iarr[i] + j];
     }
 }
 
@@ -89,11 +83,8 @@ const int& MatrixS::at(const std::ptrdiff_t i, const std::ptrdiff_t j) const {
         throw std::out_of_range("index out of range");
     }
     else {
-        std::ptrdiff_t k = 0;
-        while (i != iarr[k] && !(i > iarr[k] && i < iarr[k + 1])) {
-            k++;
-        }
-        return earr[k * n_ + j];
+
+        return earr[iarr[i] + j];
     }
 }
 
