@@ -41,8 +41,9 @@ public:
 private:
     int* earr = nullptr;
     std::ptrdiff_t* iarr = nullptr;
-    std::ptrdiff_t m_;
-    std::ptrdiff_t n_;
+    std::ptrdiff_t m_ = 0;
+    std::ptrdiff_t n_ = 0;
+    SizeType sz = { m_, n_ };
 };
 
 #endif

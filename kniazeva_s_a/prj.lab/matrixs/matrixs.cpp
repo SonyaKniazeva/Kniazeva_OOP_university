@@ -6,20 +6,20 @@
 #include<iostream>
 
 MatrixS::MatrixS(const SizeType& size) {
-    m_ = std::get<0>(size);
-    n_ = std::get<1>(size);
-    iarr = new std::ptrdiff_t[m_];
-    for (std::ptrdiff_t i = 0; i < m_; i++) {
-        iarr[i] = i * n_;
+    std::get<0>(sz) = std::get<0>(size);
+    std::get<1>(sz) = std::get<1>(size);
+    iarr = new std::ptrdiff_t[std::get<0>(sz)];
+    for (std::ptrdiff_t i = 0; i < std::get<0>(sz); i++) {
+        iarr[i] = i * std::get<1>(sz);
     }
 
-    earr = new int[m_ * n_];
-    std::fill_n(earr, m_ * n_, 0);
+    earr = new int[std::get<0>(sz) * std::get<1>(sz)];
+    std::fill_n(earr, std::get<0>(sz) * std::get<1>(sz), 0);
 }
 
 MatrixS::MatrixS(const std::ptrdiff_t m, const std::ptrdiff_t n) {
-    m_ = m;
-    n_ = n;
+    std::get<0>(sz) = m;
+    std::get<1>(sz) = n;
     iarr = new std::ptrdiff_t[m];
     for (std::ptrdiff_t i = 0; i < m; i++) {
         iarr[i] = i * n;
@@ -30,22 +30,21 @@ MatrixS::MatrixS(const std::ptrdiff_t m, const std::ptrdiff_t n) {
 }
 
 MatrixS::MatrixS(const MatrixS& other) {
-    this->earr = new int[other.n_ * other.m_];
-    this->iarr = new std::ptrdiff_t[other.m_];
-    std::copy(other.earr, other.earr + other.n_ * other.m_, this->earr);
-    std::copy(other.iarr, other.iarr + other.m_, this->iarr);
-    this->m_ = other.m_;
-    this->n_ = other.n_;
+    this->earr = new int[std::get<1>(other.sz) * std::get<0>(other.sz)];
+    this->iarr = new std::ptrdiff_t[std::get<0>(other.sz)];
+    std::copy(other.earr, other.earr + std::get<1>(other.sz) * std::get<0>(other.sz), this->earr);
+    std::copy(other.iarr, other.iarr + std::get<0>(other.sz), this->iarr);
+    std::get<0>(this->sz) = std::get<0>(other.sz);
+    std::get<1>(this->sz) = std::get<1>(other.sz);
 
 }
 
 MatrixS& MatrixS::operator=(const MatrixS& other) {
-    this->resize(other.m_, other.n_);
-    std::copy(other.earr, other.earr + other.m_ * other.n_, this->earr);
-    std::copy(other.iarr, other.iarr + other.m_, this->iarr);
-
-    this->m_ = other.m_;
-    this->n_ = other.n_;
+    this->resize(std::get<0>(other.sz), std::get<1>(other.sz));
+    std::copy(other.earr, other.earr + std::get<1>(other.sz) * std::get<0>(other.sz), this->earr);
+    std::copy(other.iarr, other.iarr + std::get<0>(other.sz), this->iarr);
+    std::get<0>(this->sz) = std::get<0>(other.sz);
+    std::get<1>(this->sz) = std::get<1>(other.sz);
 
     return *this;
 }
@@ -53,7 +52,7 @@ MatrixS& MatrixS::operator=(const MatrixS& other) {
 int& MatrixS::at(const SizeType& elem) {
     auto i = std::get<0>(elem);
     auto j = std::get<1>(elem);
-    if (i >= m_ || i < 0 || j >= n_ || j < 0) {
+    if (i >= std::get<0>(sz) || i < 0 || j >= std::get<1>(sz) || j < 0) {
         throw std::out_of_range("index out of range");
     }
     else {
@@ -69,7 +68,7 @@ const int& MatrixS::at(const SizeType& elem) const {
 }
 
 int& MatrixS::at(const std::ptrdiff_t i, const std::ptrdiff_t j) {
-    if (i >= m_ || i < 0 || j >= n_ || j < 0) { //нумерация с 0 до m_ - 1 и с 0 до n_ - 1
+    if (i >= std::get<0>(sz) || i < 0 || j >= std::get<1>(sz) || j < 0) { //нумерация с 0 до std::get<0>(sz) - 1 и с 0 до std::get<1>(sz) - 1
         throw std::out_of_range("index out of range");
     }
     else {
@@ -79,7 +78,7 @@ int& MatrixS::at(const std::ptrdiff_t i, const std::ptrdiff_t j) {
 }
 
 const int& MatrixS::at(const std::ptrdiff_t i, const std::ptrdiff_t j) const {
-    if (i >= m_ || i < 0 || j >= n_ || j < 0) {
+    if (i >= std::get<0>(sz) || i < 0 || j >= std::get<1>(sz) || j < 0) {
         throw std::out_of_range("index out of range");
     }
     else {
@@ -92,19 +91,19 @@ void MatrixS::resize(const std::ptrdiff_t i, const std::ptrdiff_t j) {
     if (i > 0 && j > 0) {
         int* tmpearr;
         std::ptrdiff_t* tmpiarr;
-        if (i < m_ && j < n_) {
+        if (i < std::get<0>(sz) && j < std::get<1>(sz)) {
             tmpearr = new int[i * j];
             std::fill_n(tmpearr, i * j, 0);
             for (std::ptrdiff_t k = 0; k < i; k += 1) {
-                std::copy_n(this->earr + k * n_, j, tmpearr + k * j);
+                std::copy_n(this->earr + k * std::get<1>(sz), j, tmpearr + k * j);
             }
 
             tmpiarr = new std::ptrdiff_t[i];
             for (std::ptrdiff_t h = 0; h < i; h++) {
                 tmpiarr[h] = h * j;
             }
-            m_ = i;
-            n_ = j;
+            std::get<0>(sz) = i;
+            std::get<1>(sz) = j;
 
             delete[] this->iarr;
             this->iarr = tmpiarr;
@@ -114,11 +113,11 @@ void MatrixS::resize(const std::ptrdiff_t i, const std::ptrdiff_t j) {
             this->earr = tmpearr;
             tmpearr = nullptr;
         }
-        else if (i >= m_ && j >= n_) {
+        else if (i >= std::get<0>(sz) && j >= std::get<1>(sz)) {
             tmpearr = new int[i * j];
             std::fill_n(tmpearr, i * j, 0);
-            for (std::ptrdiff_t k = 0; k < m_; k += 1) {
-                std::copy_n(this->earr + k * n_, n_, tmpearr + k * j);
+            for (std::ptrdiff_t k = 0; k < std::get<0>(sz); k += 1) {
+                std::copy_n(this->earr + k * std::get<1>(sz), std::get<1>(sz), tmpearr + k * j);
             }
 
             tmpiarr = new std::ptrdiff_t[i];
@@ -126,8 +125,8 @@ void MatrixS::resize(const std::ptrdiff_t i, const std::ptrdiff_t j) {
                 tmpiarr[h] = h * j;
             }
 
-            m_ = i;
-            n_ = j;
+            std::get<0>(sz) = i;
+            std::get<1>(sz) = j;
 
             delete[] this->iarr;
             this->iarr = tmpiarr;
@@ -138,11 +137,11 @@ void MatrixS::resize(const std::ptrdiff_t i, const std::ptrdiff_t j) {
             tmpearr = nullptr;
         }
 
-        else if (i <= m_ && j >= n_) {
+        else if (i <= std::get<0>(sz) && j >= std::get<1>(sz)) {
             tmpearr = new int[i * j];
             std::fill_n(tmpearr, i * j, 0);
             for (std::ptrdiff_t k = 0; k < i; k += 1) {
-                std::copy_n(this->earr + k * n_, n_, tmpearr + k * j);
+                std::copy_n(this->earr + k * std::get<1>(sz), std::get<1>(sz), tmpearr + k * j);
             }
 
             tmpiarr = new std::ptrdiff_t[i];
@@ -150,8 +149,8 @@ void MatrixS::resize(const std::ptrdiff_t i, const std::ptrdiff_t j) {
                 tmpiarr[h] = h * j;
             }
 
-            m_ = i;
-            n_ = j;
+            std::get<0>(sz) = i;
+            std::get<1>(sz) = j;
 
             delete[] this->iarr;
             this->iarr = tmpiarr;
@@ -162,11 +161,11 @@ void MatrixS::resize(const std::ptrdiff_t i, const std::ptrdiff_t j) {
             tmpearr = nullptr;
         }
 
-        else if (i >= m_ && j <= n_) {
+        else if (i >= std::get<0>(sz) && j <= std::get<1>(sz)) {
             tmpearr = new int[i * j];
             std::fill_n(tmpearr, i * j, 0);
-            for (std::ptrdiff_t k = 0; k < m_; k += 1) {
-                std::copy_n(this->earr + k * n_, j, tmpearr + k * j);
+            for (std::ptrdiff_t k = 0; k < std::get<0>(sz); k += 1) {
+                std::copy_n(this->earr + k * std::get<1>(sz), j, tmpearr + k * j);
             }
 
             tmpiarr = new std::ptrdiff_t[i];
@@ -174,8 +173,8 @@ void MatrixS::resize(const std::ptrdiff_t i, const std::ptrdiff_t j) {
                 tmpiarr[h] = h * j;
             }
 
-            m_ = i;
-            n_ = j;
+            std::get<0>(sz) = i;
+            std::get<1>(sz) = j;
 
             delete[] this->iarr;
             this->iarr = tmpiarr;
@@ -198,11 +197,11 @@ void MatrixS::resize(const SizeType& new_size) {
     if (i > 0 && j > 0) {
         int* tmpearr;
         std::ptrdiff_t* tmpiarr;
-        if (i < m_ && j < n_) {
+        if (i < std::get<0>(sz) && j < std::get<1>(sz)) {
             tmpearr = new int[i * j];
             std::fill_n(tmpearr, i * j, 0);
             for (std::ptrdiff_t k = 0; k < i; k += 1) {
-                std::copy_n(this->earr + k * n_, j, tmpearr + k * j);
+                std::copy_n(this->earr + k * std::get<1>(sz), j, tmpearr + k * j);
             }
 
             tmpiarr = new std::ptrdiff_t[i];
@@ -210,8 +209,8 @@ void MatrixS::resize(const SizeType& new_size) {
                 tmpiarr[h] = h * j;
             }
 
-            m_ = i;
-            n_ = j;
+            std::get<0>(sz) = i;
+            std::get<1>(sz) = j;
 
             delete[] this->iarr;
             this->iarr = tmpiarr;
@@ -221,11 +220,11 @@ void MatrixS::resize(const SizeType& new_size) {
             this->earr = tmpearr;
             tmpearr = nullptr;
         }
-        if (i >= m_ && j >= n_) {
+        if (i >= std::get<0>(sz) && j >= std::get<1>(sz)) {
             tmpearr = new int[i * j];
             std::fill_n(tmpearr, i * j, 0);
-            for (std::ptrdiff_t k = 0; k < m_; k += 1) {
-                std::copy_n(this->earr + k * n_, n_, tmpearr + k * j);
+            for (std::ptrdiff_t k = 0; k < std::get<0>(sz); k += 1) {
+                std::copy_n(this->earr + k * std::get<1>(sz), std::get<1>(sz), tmpearr + k * j);
             }
 
             tmpiarr = new std::ptrdiff_t[i];
@@ -233,8 +232,8 @@ void MatrixS::resize(const SizeType& new_size) {
                 tmpiarr[h] = h * j;
             }
 
-            m_ = i;
-            n_ = j;
+            std::get<0>(sz) = i;
+            std::get<1>(sz) = j;
 
             delete[] this->iarr;
             this->iarr = tmpiarr;
@@ -245,11 +244,11 @@ void MatrixS::resize(const SizeType& new_size) {
             tmpearr = nullptr;
         }
 
-        if (i <= m_ && j >= n_) {
+        if (i <= std::get<0>(sz) && j >= std::get<1>(sz)) {
             tmpearr = new int[i * j];
             std::fill_n(tmpearr, i * j, 0);
             for (std::ptrdiff_t k = 0; k < i; k += 1) {
-                std::copy_n(this->earr + k * n_, n_, tmpearr + k * j);
+                std::copy_n(this->earr + k * std::get<1>(sz), std::get<1>(sz), tmpearr + k * j);
             }
 
             tmpiarr = new std::ptrdiff_t[i];
@@ -257,8 +256,8 @@ void MatrixS::resize(const SizeType& new_size) {
                 tmpiarr[h] = h * j;
             }
 
-            m_ = i;
-            n_ = j;
+            std::get<0>(sz) = i;
+            std::get<1>(sz) = j;
 
             delete[] this->iarr;
             this->iarr = tmpiarr;
@@ -269,10 +268,10 @@ void MatrixS::resize(const SizeType& new_size) {
             tmpearr = nullptr;
         }
 
-        if (i >= m_ && j <= n_) {
+        if (i >= std::get<0>(sz) && j <= std::get<1>(sz)) {
             tmpearr = new int[i * j];
             std::fill_n(tmpearr, i * j, 0);
-            for (std::ptrdiff_t k = 0; k < m_; k += 1) {
+            for (std::ptrdiff_t k = 0; k < std::get<0>(sz); k += 1) {
                 std::copy_n(this->earr + k * j, j, tmpearr + k * j);
             }
 
@@ -281,8 +280,8 @@ void MatrixS::resize(const SizeType& new_size) {
                 tmpiarr[h] = h * j;
             }
 
-            m_ = i;
-            n_ = j;
+            std::get<0>(sz) = i;
+            std::get<1>(sz) = j;
 
             delete[] this->iarr;
             this->iarr = tmpiarr;
@@ -299,15 +298,13 @@ void MatrixS::resize(const SizeType& new_size) {
 }
 
 const MatrixS::SizeType& MatrixS::ssize() const noexcept {
-    auto tpl = std::make_tuple(m_, n_);
-    const MatrixS::SizeType& sizee = std::cref(tpl);
-    return sizee;
+    return sz;
 }
 
 std::ptrdiff_t MatrixS::nRows() const noexcept {
-    return m_;
+    return std::get<0>(sz);
 }
 
 std::ptrdiff_t MatrixS::nCols() const noexcept {
-    return n_;
+    return std::get<1>(sz);
 }
